@@ -1,9 +1,10 @@
 # EDR wrong balance when impersonating EIP-4337 EntryPoint contract
 
-This is a minimal reproduction repo for a bug in EDR.
+This is a minimal reproduction repo for a bug in EDR involving impersonation, an
+ EIP-4337 contract and stray balances.
 
-There is a test suite fail in porting the OpenZeppelin contracts test suite from 
-Hardhat 2 to Hardhat 3. Specifically:
+We found it through a test suite fail in porting the OpenZeppelin contracts test 
+suite from Hardhat 2 to Hardhat 3. Specifically:
 
 https://github.com/Amxx/openzeppelin-contracts/blob/eb7e57d4aaf3b24baefb0f5a26b8293dc11c0781/test/account/Account.behavior.js#L56-L64
 
@@ -27,7 +28,7 @@ it('should pay missing account funds for execution', async function () {
 
 ## The Issue
 
-The OpenZeppelin test does:
+The OpenZeppelin test has the following steps:
 
 1. Sets up the EntryPoint v9 contract using `hardhat_setCode` via OpenZeppelin's 
 internal `hardhat-predeploy` plugin.
