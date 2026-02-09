@@ -4,5 +4,5 @@ import { defineConfig } from "hardhat/config";
 
 export default defineConfig({
   plugins: [hardhatToolboxViemPlugin, hardhatPredeploy],
-  solidity: "0.8.28",
+  solidity: "0.8.31",
 });

@@ -6,6 +6,13 @@ async function main() {
   const connection = await network.connect();
   const { viem, networkHelpers } = connection;
 
+  const bigIntReplacer = (_key: any, value: any) => {
+    if (typeof value === "bigint") {
+      return value.toString(); // Convert BigInt to a string
+    }
+    return value; // Return all other values unchanged
+  };
+
   console.log(
     "Impersonating EntryPoint v09 leads to wrong balances bug reproduction",
   );
@@ -69,9 +76,18 @@ async function main() {
     chain: entrypointClient.chain,
   });
 
+  // // Switch this call for the above to show that double calls updates the balances
+  // const txHash = await contractWithFailingCall.write.lowLevelDoubleCall(
+  //   [testValue / 2n],
+  //   {
+  //     account: entrypointClient.account,
+  //     chain: entrypointClient.chain,
+  //   },
+  // );
+
   // // Switch this call for the above to show that adding an Event
   // // after updates the balances
-  // const txHash = await buggyAccount.write.lowLevelCallThenEventEmit(
+  // const txHash = await contractWithFailingCall.write.lowLevelCallThenEventEmit(
   //   [testValue],
   //   {
   //     account: entrypointClient.account,
@@ -82,6 +98,11 @@ async function main() {
   const receipt = await publicClient.waitForTransactionReceipt({
     hash: txHash,
   });
+  console.log(
+    `  Transaction receipt: ${JSON.stringify(receipt, bigIntReplacer)}`,
+  );
+  console.log();
+
   const minedBlockNumber = receipt.blockNumber;
 
   const balanceAtMinedBlock = await publicClient.getBalance({

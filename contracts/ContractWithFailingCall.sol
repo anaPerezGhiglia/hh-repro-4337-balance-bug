@@ -15,6 +15,18 @@ contract ContractWithFailingCall {
         return 0;
     }
 
+    function lowLevelDoubleCall(uint256 missingFunds) external returns (uint256) {
+        if (missingFunds > 0) {
+            // Double low-level call sending ETH to caller (msg.sender)
+            // works
+            assembly ("memory-safe") {
+                pop(call(gas(), caller(), missingFunds, 0, 0, 0, 0))
+                pop(call(gas(), caller(), missingFunds, 0, 0, 0, 0))
+            }
+        }
+        return 0;
+    }
+
     function lowLevelCallThenEventEmit(
         uint256 missingFunds
     ) external returns (uint256) {
