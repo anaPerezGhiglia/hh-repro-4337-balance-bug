@@ -59,3 +59,7 @@ pnpm install
 
 pnpm hardhat run ./scripts/reproduce-4337-impersonation-bug.ts
 ```
+
+## Discoveries
+
+See [here](./DISCOVERIES.md)
